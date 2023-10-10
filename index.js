@@ -5,11 +5,13 @@ dotenv.config()
 
 const cors = require('cors');
 const router = require('./router')
+
+const db = require('./db.js')
 const port = process.env.PORT;
 
 const corsOptions = {
-    origin: '*',
-    methods : 'GET,POST,DELETE,PUT,OPTIONS',
+    origin:"*",
+    methods : "GET,HEAD,PUT,PATCH,POST,DELETE",
     preflightContinue: false,
     optionsSuccesStatus: 204
 }
@@ -18,4 +20,9 @@ app.use(express.json());
 app.use(cors(corsOptions));
 app.use(router)
 
-app.listen(port, console.log(`servidor levantado en puerto ${port}`))
+db.then(()=> {
+    app.listen(port, ()=> console.log(`Server connected on port: ${port}`))
+})
+.catch((error)=> {
+    console.log(`error:  ${error}`)
+})

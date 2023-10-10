@@ -1,18 +1,21 @@
-import { Sequelize, Datatypes } from 'sequelize';
+const { Sequelize, Datatypes } = require('sequelize') 
 const config = require('./config/config.json');
 
+const dotenv = require('dotenv');
+dotenv.config();
+
 const sequelize = new Sequelize(
-    config.development.database,
-    config.development.username,
-    config.development.password,
+    process.env.DATABASE || config.development.database,
+    process.env.DB_USERNAME || config.development.username,
+    process.env.PASSWORD || config.development.password,
     {
-        host: config.development.host,
-        port: config.development.port,
+        host:  process.env.DB_PASSWORD || config.development.host,
+        port:  process.env.DB_PORT || config.development.port,
         dialect: 'mysql',
-        operatorsAliases: false,
+        operatorsAliases: 0,
         pool : {
             max:5,
-            min,
+            min:0 ,
             acquire: 30000,
             idle: 10000
         }
@@ -20,7 +23,7 @@ const sequelize = new Sequelize(
 );
 
 module.exports = sequelize.authenticate()
-.then((db)=> {
-    console.log(`Connected to Database`)
+.then((db)=>{
+    console.log('MYSQL connected to database'); 
     return db;
-})
+}); 
