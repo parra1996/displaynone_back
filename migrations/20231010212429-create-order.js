@@ -29,7 +29,7 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-        userID: {
+      userID: {
         type: Sequelize.INTEGER,
         allowNull:false,
         references: {
@@ -39,7 +39,10 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      destiny: {
+      email: {
+        type: Sequelize.STRING
+      },
+      addressee: {
         type: Sequelize.STRING
       },
       weight: {

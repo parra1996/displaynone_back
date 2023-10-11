@@ -24,6 +24,6 @@ const sequelize = new Sequelize(
 
 module.exports = sequelize.authenticate()
 .then((db)=>{
-    console.log('MYSQL connected to database'); 
+    console.log('Database connected '); 
     return db;
 }); 
