@@ -44,9 +44,6 @@ companyController.updateCompany = (req,res) => {
     const companyID = req.params.id;
     const {name, zip, email, } = req.body;
 
-    console.log(name, zip, email)
-    console.log(companyID)
-
     try{
         Company.findOne({
             where : {
@@ -55,15 +52,15 @@ companyController.updateCompany = (req,res) => {
         })
         .then( companyFound =>{
             res.send(companyFound)
-            // companyFound.update({
-            //     name: name,
-            //     zip: zip,
-            //     email : email
-            // })
-            // res.send(companyFound)
+            companyFound.update({
+                name: name,
+                zip: zip,
+                email : email
+            })
+            res.send(companyFound)
         })
     }catch(error){
-        res.send(error)
+        res.status(409).send(error.message)
     }
 }
 

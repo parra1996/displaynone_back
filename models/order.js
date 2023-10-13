@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     userID: DataTypes.STRING,
     addressee: DataTypes.STRING,
-    weight: DataTypes.FLOAT
+    weight: DataTypes.FLOAT,
+    price: DataTypes.FLOAT
   }, {
     sequelize,
     modelName: 'Order',

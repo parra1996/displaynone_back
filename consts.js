@@ -1,1 +1,3 @@
-export const ADMIN = 'admin';
+module.exports = {
+  ADMIN :'admin'
+}

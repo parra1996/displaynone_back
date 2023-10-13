@@ -1,4 +1,5 @@
 const {Order} = require('../models/index');
+const { Client } = require('../models/index');
 
 const orderController = {};
 
@@ -10,9 +11,26 @@ orderController.getAll = (req,res) => {
 };
 
 orderController.createOrder = async (req,res) => {
-    const {clientID, companyID, userID, addressee, weight, email} = req.body;
+    const {
+        clientID,
+        companyID,
+        userID,
+        addressee,
+        weight,
+        email, 
+        firstName,
+        lastName,
+        clientEmail
+    } = req.body;
+
     try{
-        Order.create({
+        createClient(
+        firstName,
+        lastName,
+        clientEmail
+        )
+
+       await Order.create({
             clientID: clientID,
             companyID: companyID,
             userID: userID,
@@ -32,6 +50,30 @@ orderController.createOrder = async (req,res) => {
         res.status(400).send({
             'error': err
         })
+    }
+}
+
+const createClient = ( 
+    firstName,
+    lastName,
+    clientEmail
+    ) => {
+    try{
+      Client.create({
+        firstName: firstName,
+        lastName: lastName,
+        email : clientEmail
+      })
+      .then(clientCreated=> {
+        if(clientCreated){
+            return ('client created succesfully');
+        }else{
+            return ('A problem occured registering a client')
+        }
+      })
+        
+    }catch(err){
+        res.send(err.message)
     }
 }
 

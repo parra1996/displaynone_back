@@ -1,12 +1,49 @@
 const {User} = require("../models/index");
 const UserController = {}
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const authConfig = require('../config/auth');
+const jwt = require('jsonwebtoken')
 
 UserController.getAll = (req,res) => {
     User.findAll()
     .then(data => {
         res.send(data)
     })
+}
+
+UserController.login = (req,res) => {
+    const { username, password} = req.body;
+    try {
+        User.findOne({
+            where : {
+                username : username
+            }
+        })
+        .then(userFound =>{
+            if(!userFound){
+                res.status(404).send('A user was not found')
+            }else {
+                
+            if (bcrypt.compareSync(password, userFound.password)) { 
+
+                const token = jwt.sign({ user: userFound }, authConfig.secret, {
+                    expiresIn: authConfig.expires
+                });
+
+                const {username, role, id} = userFound;
+
+                res.json({
+                    user: {username, role, id},
+                    token: token
+                })
+            } else {
+                res.status(404).send("A user was not found");
+            }
+            }
+        })
+    }catch(error){
+        res.send(error)
+    }
 }
 
 UserController.register = (req,res) => {
@@ -43,16 +80,15 @@ UserController.register = (req,res) => {
 }
 
 UserController.updateUser = async (req,res) => {
+    try{
     const userID = req.params.id;
     const newRol = req.body.role;
-    try{
         User.findOne({
             where: {
                 id: userID
             }
         })
         .then(async userFound => {
-            console.log(userFound)
             if(!userFound){
                 res.status(400).send('No user was found with this id');
                 return
