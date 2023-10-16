@@ -18,12 +18,6 @@ module.exports = {
       companyName: {
         type: Sequelize.STRING,
         allowNull: false,
-        references: {
-          model: 'companies',
-          key: 'name'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
       },
       direction: {
         type:Sequelize.STRING
