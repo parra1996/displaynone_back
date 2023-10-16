@@ -21,7 +21,7 @@ module.exports = {
         },
         {
         username: 'jesus897',
-        role: 'client',
+        role: 'admin',
         password: '$2b$12$o/D126cmgrUxnSStzBklfuILm6MgjKAs9QZNiLdwoc01Fwk9zU0k2',
         createdAt: new Date(),
         updatedAt: new Date()

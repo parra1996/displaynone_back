@@ -10,12 +10,10 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
+        unique:true,
         type: Sequelize.STRING
       },
       zip: {
-        type: Sequelize.STRING
-      },
-      email: {
         type: Sequelize.STRING
       },
       createdAt: {

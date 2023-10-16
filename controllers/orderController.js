@@ -1,5 +1,6 @@
+const { Op } = require('sequelize');
 const {Order} = require('../models/index');
-const { Client } = require('../models/index');
+const {Company} = require('../models/index');
 
 const orderController = {};
 
@@ -12,68 +13,58 @@ orderController.getAll = (req,res) => {
 
 orderController.createOrder = async (req,res) => {
     const {
-        clientID,
-        companyID,
-        userID,
+        direction,
+        zip,
+        name,
         addressee,
         weight,
-        email, 
-        firstName,
-        lastName,
-        clientEmail
+        clientName,
+        price,
+        order_type
     } = req.body;
-
+    
     try{
-        createClient(
-        firstName,
-        lastName,
-        clientEmail
-        )
-
-       await Order.create({
-            clientID: clientID,
-            companyID: companyID,
-            userID: userID,
-            addressee: addressee,
-            weight: weight,
-            email: email
-        })
-        .then(newOrder => {
-            if(newOrder){
-                res.send(`A new order to: ${addressee} has been placed`);
-            }
-            else{
-                res.status(400).send('Error, please check yor order and try again')
+        const zipToFound = zip.slice(0,2);
+        Company.findOne({
+            where: {
+                zip: {
+                    [Op.like]: `${zipToFound}%`
+                }
             }
         })
+        .then(companyFound => {
+                Order.create({
+                companyName : companyFound ? companyFound.name : 'Invent' ,
+                direction,
+                zip,
+                name,
+                addressee,
+                weight,
+                clientName,
+                price,
+                order_type
+                })
+                .then(newOrder => {
+                if(newOrder){
+                    res.json({
+                        message:`A new order made by : ${clientName} to: ${addressee} has been placed`
+                    });
+                }
+                else{
+                    res.status(400).send('Error, please check yor order and try again')
+                }
+                })
+            
+        })
+        .catch(err=>{
+            res.status(409).send(err.message)
+        })
+      
+       
     }catch(err){
         res.status(400).send({
-            'error': err
+            'error': err.message
         })
-    }
-}
-
-const createClient = ( 
-    firstName,
-    lastName,
-    clientEmail
-    ) => {
-    try{
-      Client.create({
-        firstName: firstName,
-        lastName: lastName,
-        email : clientEmail
-      })
-      .then(clientCreated=> {
-        if(clientCreated){
-            return ('client created succesfully');
-        }else{
-            return ('A problem occured registering a client')
-        }
-      })
-        
-    }catch(err){
-        res.send(err.message)
     }
 }
 
@@ -88,7 +79,7 @@ orderController.deleteOrder = (req,res) => {
         .then(orderFound =>{
             if(orderFound){
                 orderFound.destroy();
-                res.send(`the order with destiny to ${orderFound.addressee} has been removed`)
+                res.json({message:`the order with destiny to ${orderFound.addressee} has been removed`})
             }
             else{
                 res.status(400).send( 'There was no order with this id')

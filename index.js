@@ -24,5 +24,5 @@ db.then(()=> {
     app.listen(port, ()=> console.log(`Server connected on port: ${port}`))
 })
 .catch((error)=> {
-    console.log(`error:  ${error}`)
+    console.log(`error:  ${error.message}`)
 })

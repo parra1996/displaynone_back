@@ -12,7 +12,6 @@ companyController.registerCompany = (req,res) => {
     const {
         name,
         zip,
-        email
     } = req.body;
 
     try {
@@ -26,13 +25,12 @@ companyController.registerCompany = (req,res) => {
                 Company.create({
                     name,
                     zip,
-                    email
                 })
                 .then(newCompany=> {
-                    res.send(`a new company named ${newCompany.name} has been created`)
+                    res.json({message:`a new company named ${newCompany.name} has been created`})
                 })
             }else{
-                res.status(409).send('A company with this name already exists')
+                res.status(409).json({message:'A company with this name already exists'})
             }
         })
     }catch(error){
@@ -42,8 +40,7 @@ companyController.registerCompany = (req,res) => {
 
 companyController.updateCompany = (req,res) => {
     const companyID = req.params.id;
-    const {name, zip, email, } = req.body;
-
+    const {name, zip } = req.body;
     try{
         Company.findOne({
             where : {
@@ -51,13 +48,11 @@ companyController.updateCompany = (req,res) => {
             }
         })
         .then( companyFound =>{
-            res.send(companyFound)
             companyFound.update({
                 name: name,
                 zip: zip,
-                email : email
             })
-            res.send(companyFound)
+            res.json({message: companyFound})
         })
     }catch(error){
         res.status(409).send(error.message)
@@ -75,10 +70,10 @@ companyController.deleteCompany = (req,res) => {
         .then(companyFound =>{
             if(companyFound){
                 companyFound.destroy();
-                res.send(`Company ${companyFound.name} has been removed`)
+                res.json({message: `Company ${companyFound.name} has been removed`})
             }
             else{
-                res.status(422).send( 'There was no company with this id')
+                res.status(422).json( {message: 'There was no company with this id'})
             }
         })
     }catch(err){

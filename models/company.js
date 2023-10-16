@@ -11,14 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
      this.hasMany(models.Order, {
-      foreignKey: 'companyID'
+      foreignKey: 'companyName'
     });
     }
   }
   Company.init({
     name: DataTypes.STRING,
     zip: DataTypes.STRING,
-    email: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Company',
